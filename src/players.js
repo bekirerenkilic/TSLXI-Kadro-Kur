@@ -18,7 +18,7 @@ const fenerbahcePlayers = [
     {
       id: 102,
       name: "Matteo Guendouzi",
-      shortName: "M. GUENDOUZİ",
+      shortName: "M. GUENDOUZI",
       number: 6,
       age: 27,
       country: "France",
@@ -58,7 +58,7 @@ const fenerbahcePlayers = [
     {
       id: 106,
       name: "Sidiki Cheriff",
-      shortName: "S. CHERİFF",
+      shortName: "S. CHERIFF",
       number: 26,
       age: 19,
       country: "France",
@@ -68,7 +68,7 @@ const fenerbahcePlayers = [
     {
       id: 107,
       name: "Marco Asensio",
-      shortName: "M. ASENSİO",
+      shortName: "M. ASENSIO",
       number: 10,
       age: 30,
       country: "Spain",
@@ -98,7 +98,7 @@ const fenerbahcePlayers = [
     {
       id: 110,
       name: "Milan Skriniar",
-      shortName: "M. SKRİNİAR",
+      shortName: "M. SKRINIAR",
       number: 37,
       age: 31,
       country: "Slovakia",
@@ -128,7 +128,7 @@ const fenerbahcePlayers = [
     {
       id: 113,
       name: "Talisca",
-      shortName: "TALİSCA",
+      shortName: "TALISCA",
       number: 94,
       age: 32,
       country: "Brazil",
@@ -218,7 +218,7 @@ const fenerbahcePlayers = [
     {
       id: 122,
       name: "Vedat Muriqi",
-      shortName: "V. MURİQİ",
+      shortName: "V. MURIQI",
       number: 19,
       age: 32,
       country: "Kosova",
@@ -228,7 +228,7 @@ const fenerbahcePlayers = [
     {
       id: 123,
       name: "Dominik Livakovic",
-      shortName: "D. LİVAKOVİC",
+      shortName: "D. LIVAKOVIC",
       number: 40,
       age: 31,
       country: "Croatia",
@@ -268,7 +268,7 @@ const fenerbahcePlayers = [
     {
       id: 127,
       name: "Ognjen Mimovic",
-      shortName: "O. MİMOVİC",
+      shortName: "O. MIMOVIC",
       number: 77,
       age: 21,
       country: "Serbia",
@@ -308,7 +308,7 @@ const fenerbahcePlayers = [
     {
       id: 131,
       name: "Amara Diouf",
-      shortName: "A. DİOUF",
+      shortName: "A. DIOUF",
       number: null,
       age: 18,
       country: "Senegal",
@@ -382,7 +382,7 @@ const galatasarayPlayers = [
     {
       id: 201,
       name: "Victor Osimhen",
-      shortName: "V. OSİMHEN",
+      shortName: "V. OSIMHEN",
       number: 45,
       age: 27,
       country: "Nigeria",
@@ -412,7 +412,7 @@ const galatasarayPlayers = [
     {
       id: 204,
       name: "Wilfiried Singo",
-      shortName: "W. SİNGO",
+      shortName: "W. SINGO",
       number: 90,
       age: 25,
       country: "Ivory Coast",
@@ -472,7 +472,7 @@ const galatasarayPlayers = [
     {
       id: 210,
       name: "Roland Sallai",
-      shortName: "R. SALLAİ",
+      shortName: "R. SALLAI",
       number: 7,
       age: 29,
       country: "Hungary",
@@ -482,7 +482,7 @@ const galatasarayPlayers = [
     {
       id: 211,
       name: "Lucas Torreira",
-      shortName: "L. TORREİRA",
+      shortName: "L. TORREIRA",
       number: 34,
       age: 30,
       country: "Uruguay",
@@ -552,7 +552,7 @@ const galatasarayPlayers = [
     {
       id: 218,
       name: "Mario Lemina",
-      shortName: "M. LEMİNA",
+      shortName: "M. LEMINA",
       number: 99,
       age: 32,
       country: "Gabon",
@@ -746,7 +746,7 @@ const besiktasPlayers = [
     {
       id: 308,
       name: "Wilfred Ndidi",
-      shortName: "W. NDİDİ",
+      shortName: "W. NDIDI",
       number: 4,
       age: 29,
       country: "Nigeria",
@@ -756,7 +756,7 @@ const besiktasPlayers = [
     {
       id: 309,
       name: "Junior Olaitan",
-      shortName: "J. OLAİTAN",
+      shortName: "J. OLAITAN",
       number: 15,
       age: 24,
       country: "Benin",
@@ -786,7 +786,7 @@ const besiktasPlayers = [
     {
       id: 312,
       name: "Amir Murillo",
-      shortName: "A. MURİLLO",
+      shortName: "A. MURILLO",
       number: 62,
       age: 30,
       country: "Panama",
@@ -856,7 +856,7 @@ const besiktasPlayers = [
     {
       id: 319,
       name: "Amir Hadziahmetovic",
-      shortName: "A. HADZİAHMETOVİC",
+      shortName: "A. HADZIAHMETOVİC",
       number: 5,
       age: 29,
       country: "Bosnia",
@@ -866,7 +866,7 @@ const besiktasPlayers = [
     {
       id: 320,
       name: "Milot Rashica",
-      shortName: "M. RASHİCA",
+      shortName: "M. RASHICA",
       number: 7,
       age: 30,
       country: "Kosova",
@@ -876,7 +876,7 @@ const besiktasPlayers = [
     {
       id: 321,
       name: "Felix Uduokhai",
-      shortName: "F. UDUOKHAİ",
+      shortName: "F. UDUOKHAI",
       number: 14,
       age: 28,
       country: "Germany",
@@ -916,7 +916,7 @@ const besiktasPlayers = [
     {
       id: 325,
       name: "Joao Mario",
-      shortName: "J. MARİO",
+      shortName: "J. MARIO",
       number: null,
       age: 33,
       country: "Portugal",
@@ -936,7 +936,7 @@ const besiktasPlayers = [
     {
       id: 327,
       name: "Elan Ricardo",
-      shortName: "E. RİCARDO",
+      shortName: "E. RICARDO",
       number: null,
       age: 22,
       country: "Colombia",
@@ -991,7 +991,7 @@ const trabzonsporPlayers = [
     {
       id: 402,
       name: "Ernest Muci",
-      shortName: "E. MUCİ",
+      shortName: "E. MUCI",
       number: 7,
       age: 25,
       country: "Albania",
@@ -1011,7 +1011,7 @@ const trabzonsporPlayers = [
     {
       id: 404,
       name: "Wagner Pina",
-      shortName: "W. PİNA",
+      shortName: "W. PINA",
       number: 20,
       age: 23,
       country: "Capo Verde",
@@ -1051,7 +1051,7 @@ const trabzonsporPlayers = [
     {
       id: 408,
       name: "Noah Saviolo",
-      shortName: "N. SAVİOLO",
+      shortName: "N. SAVIOLO",
       number: 70,
       age: 22,
       country: "Portugal",
@@ -1061,7 +1061,7 @@ const trabzonsporPlayers = [
     {
       id: 409,
       name: "Chibuike Nwaiwu",
-      shortName: "C. NWAİWU",
+      shortName: "C. NWAIWU",
       number: 27,
       age: 23,
       country: "Nigeria",
@@ -1081,7 +1081,7 @@ const trabzonsporPlayers = [
     {
       id: 411,
       name: "Tim Jakob-Folcarelli",
-      shortName: "T. JAKOB-FOLCARELLİ",
+      shortName: "T. FOLCARELLI",
       number: 26,
       age: 26,
       country: "France",
@@ -1101,7 +1101,7 @@ const trabzonsporPlayers = [
     {
       id: 413,
       name: "Benjamin Bouchouari",
-      shortName: "B. BOUCHOUARİ",
+      shortName: "B. BOUCHOUARI",
       number: 8,
       age: 24,
       country: "Morocco",
@@ -1131,7 +1131,7 @@ const trabzonsporPlayers = [
     {
       id: 416,
       name: "Ruslan Malinovskyi",
-      shortName: "R. MALİNOVSKYİ",
+      shortName: "R. MALINOVSKYİ",
       number: 17,
       age: 33,
       country: "Ukraine",
@@ -1221,7 +1221,7 @@ const trabzonsporPlayers = [
     {
       id: 425,
       name: "Rene Mitongo",
-      shortName: "R. MİTONGO",
+      shortName: "R. MITONGO",
       number: 19,
       age: 18,
       country: "Belgium",
@@ -1251,7 +1251,7 @@ const trabzonsporPlayers = [
     {
       id: 428,
       name: "Stefan Savic",
-      shortName: "S. SAVİC",
+      shortName: "S. SAVIC",
       number: 15,
       age: 35,
       country: "Montenegro",
