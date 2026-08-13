@@ -132,7 +132,7 @@ const fenerbahcePlayers = [
       number: 94,
       age: 32,
       country: "Brazil",
-      position: "SNT",
+      position: "OOS",
       tags: ["yabanci", "fenerbahce"]
     },
     {

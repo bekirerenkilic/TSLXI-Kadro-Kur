@@ -13,23 +13,29 @@ const teams = {
     short: 'BJK',
     primary: '#000000',
     secondary: '#ffffff',
-    manager: 'Vincenzo Italiano'
+    manager: 'Vincenzo Italiano',
+    chipBg: '#000000',
+    chipText: '#ffffff'
   },
 
   fenerbahce: {
     name: 'Fenerbahçe',
     short: 'FB',
-    primary: '#f7d000',
-    secondary: '#001f5b',
-    manager: 'İsmail Kartal'
+    primary: '#f2ff00',
+    secondary: '#071633',
+    manager: 'İsmail Kartal',
+    chipBg: '#071633',
+    chipText: '#f2ff00'
   },
 
   galatasaray: {
     name: 'Galatasaray',
     short: 'GS',
-    primary: '#d90027',
-    secondary: '#f5c400',
-    manager: 'Okan Buruk'
+    primary: '#9d0b26',
+    secondary: '#f5ac00',
+    manager: 'Okan Buruk',
+    chipBg: '#9d0b26',
+    chipText: '#f5ac00'
   },
 
   trabzonspor: {
@@ -37,7 +43,9 @@ const teams = {
     short: 'TS',
     primary: '#7a1835',
     secondary: '#4aa9d8',
-    manager: 'Fatih Tekke'
+    manager: 'Fatih Tekke',
+    chipBg: '#7a1835',
+    chipText: '#4aa9d8'
   }
 }
 
@@ -223,6 +231,33 @@ const formations = {
 
 
 /* =========================================================
+   TAKIMLARI İNCELE — 4-2-1-3 POZİSYON DÜZENİ
+   (kadrodaki tüm oyuncular pozisyon koduna göre gruplanır)
+========================================================= */
+
+/*
+  Yatay saha: x = kale-kaleye yön (sol→sağ),
+  y = sahanın genişliği (üst→alt).
+  Aynı x'teki slotlar dikey sütun oluşturur,
+  bu da yatayda sıkışmayı önler.
+*/
+
+const explorePositions = [
+  { code: 'KL', x: 11, y: 50 },
+  { code: 'SLB', x: 32, y: 13 },
+  { code: 'STP', part: 1, x: 29, y: 36 },
+  { code: 'STP', part: 2, x: 29, y: 64 },
+  { code: 'SĞB', x: 32, y: 87 },
+  { code: 'DOS', x: 52, y: 28 },
+  { code: 'OS', x: 52, y: 72 },
+  { code: 'OOS', x: 69, y: 50 },
+  { code: 'SLK', x: 86, y: 15 },
+  { code: 'SNT', x: 90, y: 50 },
+  { code: 'SĞK', x: 86, y: 85 }
+]
+
+
+/* =========================================================
    DURUM
 ========================================================= */
 
@@ -235,6 +270,14 @@ let selectedFormation = '4-3-3'
 let selectedSlot = null
 
 let lineup = Array(11).fill(null)
+
+/*
+  Sayfa: 'builder' (kadro kurma) veya 'explore' (takımları incele)
+*/
+
+let currentPage = 'builder'
+
+let exploreTeam = 'besiktas'
 
 /*
   10+4 havuzu
@@ -291,6 +334,8 @@ function bindBrandHome() {
 
 function goHome() {
 
+  currentPage = 'builder'
+
   selectedMode = 'free'
 
   selectedSlot = null
@@ -300,14 +345,43 @@ function goHome() {
 }
 
 
+function bindExploreNavButton() {
+
+  const exploreBtn =
+    document.querySelector(
+      '#openTeamsExplore'
+    )
+
+  if (exploreBtn) {
+
+    exploreBtn.addEventListener(
+      'click',
+      () => {
+
+        currentPage = 'explore'
+
+        render()
+
+      }
+    )
+
+  }
+
+}
+
+
 /* =========================================================
    OYUNCU VERİSİ YARDIMCILARI
 ========================================================= */
 
-function getTeamPlayers() {
+function getPlayersForTeam(teamKey) {
   return [...players, ...customPlayers].filter(player =>
-    player.tags?.includes(selectedTeam)
+    player.tags?.includes(teamKey)
   )
+}
+
+function getTeamPlayers() {
+  return getPlayersForTeam(selectedTeam)
 }
 
 function isForeign(player) {
@@ -327,6 +401,13 @@ function isLocal(player) {
 
 function isAlreadyInPool(player) {
   return getAllPoolPlayers().some(item => item.id === player.id)
+}
+
+function getStatusLabel(player) {
+  if (isU23Foreign(player)) return 'U23 Yabancı'
+  if (isForeign(player)) return 'Yabancı'
+  if (isLocal(player)) return 'Yerli'
+  return '—'
 }
 
 /* =========================================================
@@ -792,6 +873,14 @@ function renderPoolScreen() {
           </select>
 
         </div>
+
+
+        <button
+          id="openTeamsExplore"
+          class="secondary-button explore-nav-button"
+        >
+          Takımları İncele
+        </button>
 
       </div>
 
@@ -1940,10 +2029,12 @@ function bindPoolEvents() {
       'click',
       () => {
 
-        if (
-          foreignPool.length !== 10 ||
-          u23Pool.length !== 4
-        ) {
+        const totalCount =
+          foreignPool.length +
+          u23Pool.length +
+          localPool.length
+
+        if (totalCount < 18) {
 
           return
 
@@ -1974,6 +2065,8 @@ function bindPoolEvents() {
 
 
   bindTransferModalEvents()
+
+  bindExploreNavButton()
 
   bindBrandHome()
 
@@ -2077,6 +2170,14 @@ function renderLineup() {
           </select>
 
         </div>
+
+
+        <button
+          id="openTeamsExplore"
+          class="secondary-button explore-nav-button"
+        >
+          Takımları İncele
+        </button>
 
       </div>
 
@@ -2500,12 +2601,14 @@ function bindLineupEvents() {
       selectedMode =
         event.target.value
 
+      const totalPoolCount =
+        foreignPool.length +
+        u23Pool.length +
+        localPool.length
+
       if (
         selectedMode === '104' &&
-        (
-          foreignPool.length < 10 ||
-          u23Pool.length < 4
-        )
+        totalPoolCount < 18
       ) {
 
         renderPoolScreen()
@@ -2606,6 +2709,8 @@ function bindLineupEvents() {
 
 
   bindTransferModalEvents()
+
+  bindExploreNavButton()
 
   bindBrandHome()
 
@@ -3162,10 +3267,559 @@ function savePoolAsImage() {
 
 
 /* =========================================================
+   TAKIMLARI İNCELE SAYFASI
+========================================================= */
+
+function renderTeamsExplorePage() {
+
+  const team =
+    teams[exploreTeam]
+
+  const teamPlayers =
+    getPlayersForTeam(exploreTeam)
+
+
+  app.innerHTML = `
+
+    <header class="header">
+
+      <div class="brand" id="brandHome">
+        TSLXI
+      </div>
+
+
+      <div class="controls">
+
+        <div class="control">
+
+          <label>TAKIM</label>
+
+          <select id="exploreTeamSelect">
+
+            <option
+              value="besiktas"
+              ${exploreTeam === 'besiktas' ? 'selected' : ''}
+            >
+              Beşiktaş
+            </option>
+
+            <option
+              value="fenerbahce"
+              ${exploreTeam === 'fenerbahce' ? 'selected' : ''}
+            >
+              Fenerbahçe
+            </option>
+
+            <option
+              value="galatasaray"
+              ${exploreTeam === 'galatasaray' ? 'selected' : ''}
+            >
+              Galatasaray
+            </option>
+
+            <option
+              value="trabzonspor"
+              ${exploreTeam === 'trabzonspor' ? 'selected' : ''}
+            >
+              Trabzonspor
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <button
+          id="backToBuilder"
+          class="secondary-button"
+        >
+          ← Kadro Kurucuya Dön
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <main class="explore-main">
+
+      <section class="explore-pitch-wrap">
+
+        <div class="team-header">
+
+          <div
+            class="team-logo"
+            style="
+              background:${team.primary};
+              color:${team.secondary};
+            "
+          >
+            ${team.short}
+          </div>
+
+
+          <div>
+
+            <h1>
+              ${team.name}
+            </h1>
+
+            <p>
+              ${teamPlayers.length} oyuncu · 4-2-1-3 kadro görünümü
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="explore-pitch">
+
+          <div class="explore-pitch-surface"></div>
+
+          ${explorePositions
+            .map(
+              slot =>
+                renderExploreSlot(
+                  slot,
+                  teamPlayers,
+                  team
+                )
+            )
+            .join('')}
+
+        </div>
+
+      </section>
+
+
+      <aside class="explore-stats-panel">
+
+        ${renderExploreStats(teamPlayers)}
+
+      </aside>
+
+    </main>
+
+
+    ${renderPlayerDetailModal()}
+
+  `
+
+
+  bindExploreEvents()
+
+}
+
+
+function renderExploreSlot(slot, teamPlayers, team) {
+
+  let slotPlayers =
+    teamPlayers.filter(
+      player => player.position === slot.code
+    )
+
+  if (slot.part) {
+
+    const half =
+      Math.ceil(slotPlayers.length / 2)
+
+    slotPlayers =
+      slot.part === 1
+        ? slotPlayers.slice(0, half)
+        : slotPlayers.slice(half)
+
+  }
+
+  return `
+
+    <div
+      class="explore-slot"
+      style="
+        left:${slot.x}%;
+        top:${slot.y}%;
+      "
+    >
+
+      <div class="explore-slot-label">
+        ${slot.code}
+      </div>
+
+
+      <div class="explore-slot-players">
+
+        ${
+          slotPlayers.length
+            ? slotPlayers
+                .map(
+                  player => `
+                    <button
+                      class="explore-player-btn"
+                      data-player="${player.id}"
+                      style="
+                        background:${team.chipBg};
+                        color:${team.chipText};
+                      "
+                    >
+
+                      <span class="explore-player-name">
+                        ${player.name}
+                      </span>
+
+                      <span class="explore-player-number">
+                        #${player.number ?? '-'}
+                      </span>
+
+                    </button>
+                  `
+                )
+                .join('')
+            : `
+                <div class="explore-slot-empty">
+                  —
+                </div>
+              `
+        }
+
+      </div>
+
+    </div>
+
+  `
+
+}
+
+
+function renderExploreStats(teamPlayers) {
+
+  const foreignCount =
+    teamPlayers.filter(isForeign).length
+
+  const u23Count =
+    teamPlayers.filter(isU23Foreign).length
+
+  const localCount =
+    teamPlayers.filter(isLocal).length
+
+  return `
+
+    <h2>
+      Kadro Özeti
+    </h2>
+
+
+    <div class="explore-stat-row">
+
+      <span>
+        Toplam Oyuncu
+      </span>
+
+      <strong>
+        ${teamPlayers.length}
+      </strong>
+
+    </div>
+
+
+    <div class="explore-stat-row">
+
+      <span>
+        Yerli
+      </span>
+
+      <strong>
+        ${localCount}
+      </strong>
+
+    </div>
+
+
+    <div class="explore-stat-row">
+
+      <span>
+        Yabancı
+      </span>
+
+      <strong>
+        ${foreignCount}
+      </strong>
+
+    </div>
+
+
+    <div class="explore-stat-row">
+
+      <span>
+        U23 Yabancı
+      </span>
+
+      <strong>
+        ${u23Count}
+      </strong>
+
+    </div>
+
+
+    <p class="explore-stats-hint">
+      Bir oyuncuya tıklayarak detaylarını gör.
+    </p>
+
+  `
+
+}
+
+
+/* =========================================================
+   OYUNCU DETAY MODALI
+========================================================= */
+
+function renderPlayerDetailModal() {
+
+  return `
+
+    <div
+      id="playerDetailModal"
+      class="modal hidden"
+    >
+
+      <div
+        class="modal-box"
+        id="playerDetailBox"
+      >
+      </div>
+
+    </div>
+
+  `
+
+}
+
+
+function openPlayerDetail(playerId) {
+
+  const teamPlayers =
+    getPlayersForTeam(exploreTeam)
+
+  const player =
+    teamPlayers.find(
+      item => item.id === playerId
+    )
+
+  if (!player) {
+
+    return
+
+  }
+
+
+  const team =
+    teams[exploreTeam]
+
+  const box =
+    document.querySelector(
+      '#playerDetailBox'
+    )
+
+  box.innerHTML = `
+
+    <button
+      id="closePlayerDetail"
+      class="modal-close"
+    >
+      ×
+    </button>
+
+
+    <div
+      class="player-detail-header"
+      style="
+        background:${team.chipBg};
+        color:${team.chipText};
+      "
+    >
+
+      <span class="player-detail-number">
+        #${player.number ?? '-'}
+      </span>
+
+      <h2>
+        ${player.name}
+      </h2>
+
+    </div>
+
+
+    <div class="player-detail-body">
+
+      <div class="player-detail-row">
+        <span>Kısa İsim</span>
+        <strong>${player.shortName}</strong>
+      </div>
+
+      <div class="player-detail-row">
+        <span>Pozisyon</span>
+        <strong>${player.position}</strong>
+      </div>
+
+      <div class="player-detail-row">
+        <span>Yaş</span>
+        <strong>${player.age ?? '—'}</strong>
+      </div>
+
+      <div class="player-detail-row">
+        <span>Ülke</span>
+        <strong>${player.country || '—'}</strong>
+      </div>
+
+      <div class="player-detail-row">
+        <span>Durum</span>
+        <strong>${getStatusLabel(player)}</strong>
+      </div>
+
+      <div class="player-detail-row">
+        <span>Takım</span>
+        <strong>${team.name}</strong>
+      </div>
+
+    </div>
+
+  `
+
+
+  const modal =
+    document.querySelector(
+      '#playerDetailModal'
+    )
+
+  modal.classList.remove('hidden')
+
+
+  document
+    .querySelector('#closePlayerDetail')
+    .addEventListener(
+      'click',
+      () => {
+
+        modal.classList.add('hidden')
+
+      }
+    )
+
+}
+
+
+function bindExploreEvents() {
+
+  bindBrandHome()
+
+
+  const teamSelect =
+    document.querySelector(
+      '#exploreTeamSelect'
+    )
+
+  if (teamSelect) {
+
+    teamSelect.addEventListener(
+      'change',
+      event => {
+
+        exploreTeam =
+          event.target.value
+
+        render()
+
+      }
+    )
+
+  }
+
+
+  const backBtn =
+    document.querySelector(
+      '#backToBuilder'
+    )
+
+  if (backBtn) {
+
+    backBtn.addEventListener(
+      'click',
+      () => {
+
+        currentPage = 'builder'
+
+        render()
+
+      }
+    )
+
+  }
+
+
+  document
+    .querySelectorAll('.explore-player-btn')
+    .forEach(button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+          const id =
+            Number(
+              button.dataset.player
+            )
+
+          openPlayerDetail(id)
+
+        }
+      )
+
+    })
+
+
+  const modal =
+    document.querySelector(
+      '#playerDetailModal'
+    )
+
+  if (modal) {
+
+    modal.addEventListener(
+      'click',
+      event => {
+
+        if (event.target === modal) {
+
+          modal.classList.add('hidden')
+
+        }
+
+      }
+    )
+
+  }
+
+}
+
+
+/* =========================================================
    ANA RENDER
 ========================================================= */
 
 function render() {
+
+  /*
+    Takımları İncele sayfası
+  */
+
+  if (currentPage === 'explore') {
+
+    renderTeamsExplorePage()
+
+    return
+
+  }
+
 
   /*
     10+4 seçildiğinde önce havuz oluşturulur.
@@ -3179,8 +3833,10 @@ function render() {
     */
 
     if (
-      foreignPool.length < 10 ||
-      u23Pool.length < 4
+      foreignPool.length +
+        u23Pool.length +
+        localPool.length <
+      18
     ) {
 
       renderPoolScreen()
