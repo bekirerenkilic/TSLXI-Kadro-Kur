@@ -642,13 +642,13 @@ main {
 
 
 .tag-u23 {
-  background: #4ee32d;
-  color: #ffffff;
+  background: #f2c400;
+  color: #111;
 }
 
 
 .tag-yrl {
-  background: #f2353b;
+  background: #ff8a00;
   color: white;
 }
 
@@ -1088,6 +1088,17 @@ button.pool-slot:hover {
 }
 
 
+.pool-actions-hint {
+  margin: 0;
+
+  margin-right: auto;
+
+  font-size: 12px;
+
+  opacity: .5;
+}
+
+
 .save-image-row {
   display: flex;
 
@@ -1274,159 +1285,6 @@ button.pool-slot:hover {
   opacity: .5;
 
   text-align: center;
-}
-
-
-/* =========================================================
-   YENİ TRANSFER EKLE
-========================================================= */
-
-.add-transfer-btn {
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 7px;
-
-  padding: 12px;
-
-  margin-bottom: 16px;
-
-  border: 1px dashed rgba(255,255,255,.28);
-
-  border-radius: 12px;
-
-  background: rgba(255,255,255,.03);
-
-  color: inherit;
-
-  font-size: 12px;
-  font-weight: 800;
-
-  letter-spacing: .03em;
-
-  cursor: pointer;
-
-  transition:
-    background .18s ease,
-    border-color .18s ease,
-    transform .18s ease;
-}
-
-
-.add-transfer-btn:hover {
-  background: rgba(255,255,255,.08);
-
-  border-color: rgba(255,255,255,.5);
-
-  transform: translateY(-1px);
-}
-
-
-.add-transfer-btn span {
-  font-size: 15px;
-
-  line-height: 1;
-}
-
-
-.add-transfer-form {
-  margin-bottom: 20px;
-
-  padding: 14px;
-
-  border-radius: 13px;
-
-  background: rgba(255,255,255,.035);
-
-  border: 1px solid rgba(255,255,255,.08);
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 9px;
-}
-
-
-.add-transfer-form.hidden {
-  display: none;
-}
-
-
-.add-transfer-row {
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 9px;
-}
-
-
-.add-transfer-form input,
-.add-transfer-form select {
-  width: 100%;
-
-  padding: 10px 11px;
-
-  border: 1px solid rgba(255,255,255,.1);
-
-  border-radius: 9px;
-
-  background: rgba(255,255,255,.06);
-
-  color: white;
-
-  outline: none;
-}
-
-
-.add-transfer-form input::placeholder {
-  color: rgba(255,255,255,.35);
-}
-
-
-.add-transfer-form input:focus,
-.add-transfer-form select:focus {
-  border-color: rgba(255,255,255,.35);
-}
-
-
-.add-transfer-form select option {
-  background: #111;
-  color: white;
-}
-
-
-.confirm-transfer-btn {
-  padding: 11px;
-
-  border: 0;
-
-  border-radius: 9px;
-
-  background: rgba(255,255,255,.92);
-
-  color: #0b0d10;
-
-  font-size: 12px;
-  font-weight: 900;
-
-  letter-spacing: .03em;
-
-  cursor: pointer;
-
-  transition:
-    background .18s ease,
-    transform .18s ease;
-}
-
-
-.confirm-transfer-btn:hover {
-  background: #ffffff;
-
-  transform: translateY(-1px);
 }
 
 

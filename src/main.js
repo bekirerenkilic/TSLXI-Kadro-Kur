@@ -249,11 +249,10 @@ let localPool = []
 let currentPoolCategory = null
 
 /*
-  Yeni transfer eklenen oyunculara
-  benzersiz id vermek için sayaç.
+  Kullanıcının eklediği yeni transferler
 */
 
-let customPlayerCounter = 1
+let customPlayers = []
 
 
 function resetPools() {
@@ -306,7 +305,7 @@ function goHome() {
 ========================================================= */
 
 function getTeamPlayers() {
-  return players.filter(player =>
+  return [...players, ...customPlayers].filter(player =>
     player.tags?.includes(selectedTeam)
   )
 }
@@ -328,6 +327,50 @@ function isLocal(player) {
 
 function isAlreadyInPool(player) {
   return getAllPoolPlayers().some(item => item.id === player.id)
+}
+
+/* =========================================================
+   YENİ TRANSFER — İSİM KISALTMA
+========================================================= */
+
+const TR_UPPER_MAP = {
+  i: 'İ',
+  ı: 'I',
+  ğ: 'Ğ',
+  ü: 'Ü',
+  ş: 'Ş',
+  ö: 'Ö',
+  ç: 'Ç'
+}
+
+function turkishUpper(text) {
+
+  return text
+    .split('')
+    .map(char => TR_UPPER_MAP[char] || char.toLocaleUpperCase('tr-TR'))
+    .join('')
+
+}
+
+function makeShortName(fullName) {
+
+  const parts =
+    fullName.trim().split(/\s+/)
+
+  if (parts.length === 1) {
+
+    return turkishUpper(parts[0])
+
+  }
+
+  const initials =
+    parts
+      .slice(0, -1)
+      .map(part => turkishUpper(part[0]))
+      .join('.') + '.'
+
+  return `${initials} ${turkishUpper(parts[parts.length - 1])}`
+
 }
 
 /* =========================================================
@@ -359,6 +402,27 @@ const positionGroups = {
   ]
 
 }
+
+
+const positionOptions = [
+  { code: 'KL', label: 'Kaleci (KL)' },
+  { code: 'STP', label: 'Stoper (STP)' },
+  { code: 'SĞB', label: 'Sağ Bek (SĞB)' },
+  { code: 'SLB', label: 'Sol Bek (SLB)' },
+  { code: 'DOS', label: 'Defansif Orta Saha (DOS)' },
+  { code: 'OS', label: 'Orta Saha (OS)' },
+  { code: 'OOS', label: 'Ofansif Orta Saha (OOS)' },
+  { code: 'SĞK', label: 'Sağ Kanat (SĞK)' },
+  { code: 'SLK', label: 'Sol Kanat (SLK)' },
+  { code: 'SNT', label: 'Santrafor (SNT)' }
+]
+
+
+const statusOptions = [
+  { value: 'yerli', label: 'Yerli' },
+  { value: 'yabanci', label: 'Yabancı' },
+  { value: 'u23yabanci', label: 'U23 Yabancı' }
+]
 
 
 /* =========================================================
@@ -551,202 +615,6 @@ function renderPlayerCategory(group, playerList) {
 
 
 /* =========================================================
-   YENİ TRANSFER EKLE
-========================================================= */
-
-function createCustomPlayerId() {
-
-  const id =
-    900000 + customPlayerCounter
-
-  customPlayerCounter += 1
-
-  return id
-
-}
-
-
-function renderAddTransferButton() {
-
-  return `
-
-    <button
-      type="button"
-      id="addTransferBtn"
-      class="add-transfer-btn"
-    >
-      <span>+</span>
-      Yeni Transfer Ekle
-    </button>
-
-
-    <div
-      id="addTransferForm"
-      class="add-transfer-form hidden"
-    >
-
-      <div class="add-transfer-row">
-
-        <input
-          type="text"
-          id="transferName"
-          placeholder="Oyuncu adı"
-          maxlength="40"
-        />
-
-        <input
-          type="text"
-          id="transferNumber"
-          placeholder="#"
-          maxlength="3"
-          inputmode="numeric"
-        />
-
-      </div>
-
-
-      <div class="add-transfer-row">
-
-        <select id="transferTag">
-
-          <option value="yabanci">
-            Yabancı
-          </option>
-
-          <option value="u23yabanci">
-            U23 Yabancı
-          </option>
-
-          <option value="yerli">
-            Yerli
-          </option>
-
-        </select>
-
-
-        <select id="transferPosition">
-
-          ${Object.entries(positionGroups)
-            .map(
-              ([group, positions]) => `
-                <optgroup label="${group}">
-                  ${positions
-                    .map(
-                      position => `
-                        <option value="${position}">
-                          ${position}
-                        </option>
-                      `
-                    )
-                    .join('')}
-                </optgroup>
-              `
-            )
-            .join('')}
-
-        </select>
-
-      </div>
-
-
-      <button
-        type="button"
-        id="confirmAddTransfer"
-        class="confirm-transfer-btn"
-      >
-        Kadroya Ekle
-      </button>
-
-    </div>
-
-  `
-
-}
-
-
-function bindAddTransferForm(onCreate) {
-
-  const toggleBtn =
-    document.querySelector('#addTransferBtn')
-
-  const form =
-    document.querySelector('#addTransferForm')
-
-  if (!toggleBtn || !form) {
-
-    return
-
-  }
-
-
-  toggleBtn.addEventListener(
-    'click',
-    () => {
-
-      form.classList.toggle('hidden')
-
-    }
-  )
-
-
-  const confirmBtn =
-    document.querySelector('#confirmAddTransfer')
-
-  confirmBtn.addEventListener(
-    'click',
-    () => {
-
-      const nameInput =
-        document.querySelector('#transferName')
-
-      const numberInput =
-        document.querySelector('#transferNumber')
-
-      const tagSelect =
-        document.querySelector('#transferTag')
-
-      const positionSelect =
-        document.querySelector('#transferPosition')
-
-
-      const rawName =
-        nameInput.value.trim()
-
-      const rawNumber =
-        numberInput.value.trim()
-
-
-      const name =
-        rawName || 'Transfer'
-
-      const number =
-        rawNumber ? Number(rawNumber) : null
-
-
-      const newPlayer = {
-        id: createCustomPlayerId(),
-        name,
-        shortName: name.toUpperCase(),
-        number,
-        position: positionSelect.value,
-        tags: [
-          tagSelect.value,
-          selectedTeam
-        ]
-      }
-
-
-      players.push(newPlayer)
-
-      onCreate(newPlayer)
-
-    }
-  )
-
-}
-
-
-/* =========================================================
    10+4 SLOT OYUNCU KARTI
 ========================================================= */
 
@@ -857,9 +725,16 @@ function renderPoolScreen() {
     u23Pool.length
 
 
+  const localCount =
+    localPool.length
+
+
+  const totalCount =
+    foreignCount + u23Count + localCount
+
+
   const ready =
-    foreignCount === 10 &&
-    u23Count === 4
+    totalCount >= 18
 
 
   app.innerHTML = `
@@ -1147,6 +1022,17 @@ function renderPoolScreen() {
 
         <div class="pool-actions">
 
+          ${
+            !ready
+              ? `
+                <p class="pool-actions-hint">
+                  Kadro tamamlanmadı — en az 18 oyuncu gerekli
+                  (şu an ${totalCount}/18)
+                </p>
+              `
+              : ''
+          }
+
           <button
             id="continueToLineup"
             class="primary-button"
@@ -1191,6 +1077,14 @@ function renderPoolScreen() {
         </div>
 
 
+        <button
+          id="openTransferModal"
+          class="secondary-button transfer-button"
+        >
+          + Yeni Transfer Ekle
+        </button>
+
+
         <p>
           Bir oyuncuya tıklayarak uygun kategoriye ekle.
         </p>
@@ -1223,6 +1117,8 @@ function renderPoolScreen() {
 
 
     ${renderPoolPlayerModal()}
+
+    ${renderTransferModal()}
 
   `
 
@@ -1365,8 +1261,6 @@ function openPoolPlayerModal(type, index) {
 
   list.innerHTML = `
 
-    ${renderAddTransferButton()}
-
     ${renderPlayerCategory(
       'KALECİ',
       availablePlayers
@@ -1403,17 +1297,6 @@ function openPoolPlayerModal(type, index) {
   modal.classList.remove('hidden')
 
 
-  bindAddTransferForm(
-    newPlayer => {
-
-      addPlayerToPool(
-        newPlayer
-      )
-
-    }
-  )
-
-
   list
     .querySelectorAll('.player-option')
     .forEach(button => {
@@ -1429,7 +1312,7 @@ function openPoolPlayerModal(type, index) {
 
 
           const player =
-            players.find(
+            availablePlayers.find(
               player =>
                 player.id === id
             )
@@ -1588,6 +1471,336 @@ function closePoolModal() {
 
 
   currentPoolCategory = null
+
+}
+
+
+/* =========================================================
+   YENİ TRANSFER MODALI
+========================================================= */
+
+function renderTransferModal() {
+
+  return `
+
+    <div
+      id="transferModal"
+      class="modal hidden"
+    >
+
+      <div class="modal-box">
+
+        <button
+          id="closeTransferModal"
+          class="modal-close"
+        >
+          ×
+        </button>
+
+
+        <h2>
+          Yeni Transfer Ekle
+        </h2>
+
+
+        <p class="modal-description">
+          ${teams[selectedTeam].name} kadrosuna yeni bir oyuncu ekle.
+        </p>
+
+
+        <form
+          id="transferForm"
+          class="transfer-form"
+        >
+
+          <div class="form-field">
+
+            <label for="transferName">
+              Ad Soyad
+            </label>
+
+            <input
+              type="text"
+              id="transferName"
+              placeholder="Örn. Ali Yılmaz"
+              required
+            />
+
+          </div>
+
+
+          <div class="form-row">
+
+            <div class="form-field">
+
+              <label for="transferNumber">
+                Forma Numarası
+              </label>
+
+              <input
+                type="number"
+                id="transferNumber"
+                min="1"
+                max="99"
+                placeholder="Örn. 7"
+              />
+
+            </div>
+
+
+            <div class="form-field">
+
+              <label for="transferAge">
+                Yaş
+              </label>
+
+              <input
+                type="number"
+                id="transferAge"
+                min="14"
+                max="50"
+                placeholder="Örn. 24"
+              />
+
+            </div>
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label for="transferCountry">
+              Ülke
+            </label>
+
+            <input
+              type="text"
+              id="transferCountry"
+              placeholder="Örn. Türkiye"
+              required
+            />
+
+          </div>
+
+
+          <div class="form-row">
+
+            <div class="form-field">
+
+              <label for="transferPosition">
+                Pozisyon
+              </label>
+
+              <select
+                id="transferPosition"
+                required
+              >
+
+                ${positionOptions
+                  .map(
+                    option => `
+                      <option value="${option.code}">
+                        ${option.label}
+                      </option>
+                    `
+                  )
+                  .join('')}
+
+              </select>
+
+            </div>
+
+
+            <div class="form-field">
+
+              <label for="transferStatus">
+                Durum
+              </label>
+
+              <select
+                id="transferStatus"
+                required
+              >
+
+                ${statusOptions
+                  .map(
+                    option => `
+                      <option value="${option.value}">
+                        ${option.label}
+                      </option>
+                    `
+                  )
+                  .join('')}
+
+              </select>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="primary-button"
+            >
+              Transferi Ekle
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  `
+
+}
+
+
+function openTransferModal() {
+
+  const modal =
+    document.querySelector(
+      '#transferModal'
+    )
+
+  if (modal) {
+
+    modal.classList.remove('hidden')
+
+  }
+
+}
+
+
+function closeTransferModal() {
+
+  const modal =
+    document.querySelector(
+      '#transferModal'
+    )
+
+  if (modal) {
+
+    modal.classList.add('hidden')
+
+  }
+
+}
+
+
+function submitTransferForm(event) {
+
+  event.preventDefault()
+
+  const name =
+    document
+      .querySelector('#transferName')
+      .value.trim()
+
+  const number =
+    document
+      .querySelector('#transferNumber')
+      .value
+
+  const age =
+    document
+      .querySelector('#transferAge')
+      .value
+
+  const country =
+    document
+      .querySelector('#transferCountry')
+      .value.trim()
+
+  const position =
+    document
+      .querySelector('#transferPosition')
+      .value
+
+  const status =
+    document
+      .querySelector('#transferStatus')
+      .value
+
+
+  if (!name || !country) {
+
+    return
+
+  }
+
+
+  const newPlayer = {
+    id: Date.now(),
+    name,
+    shortName: makeShortName(name),
+    number: number ? Number(number) : null,
+    age: age ? Number(age) : null,
+    country,
+    position,
+    tags: [status, selectedTeam]
+  }
+
+
+  customPlayers.push(newPlayer)
+
+  closeTransferModal()
+
+  render()
+
+}
+
+
+function bindTransferModalEvents() {
+
+  const openBtn =
+    document.querySelector(
+      '#openTransferModal'
+    )
+
+  if (openBtn) {
+
+    openBtn.addEventListener(
+      'click',
+      openTransferModal
+    )
+
+  }
+
+
+  const closeBtn =
+    document.querySelector(
+      '#closeTransferModal'
+    )
+
+  if (closeBtn) {
+
+    closeBtn.addEventListener(
+      'click',
+      closeTransferModal
+    )
+
+  }
+
+
+  const form =
+    document.querySelector(
+      '#transferForm'
+    )
+
+  if (form) {
+
+    form.addEventListener(
+      'submit',
+      submitTransferForm
+    )
+
+  }
 
 }
 
@@ -1759,6 +1972,8 @@ function bindPoolEvents() {
 
   }
 
+
+  bindTransferModalEvents()
 
   bindBrandHome()
 
@@ -2040,7 +2255,14 @@ function renderLineup() {
                 ← 10+4 Havuzunu Düzenle
               </button>
             `
-            : ''
+            : `
+              <button
+                id="openTransferModal"
+                class="secondary-button transfer-button"
+              >
+                + Yeni Transfer Ekle
+              </button>
+            `
         }
 
 
@@ -2060,6 +2282,8 @@ function renderLineup() {
 
 
     ${renderLineupModal()}
+
+    ${renderTransferModal()}
 
   `
 
@@ -2381,6 +2605,8 @@ function bindLineupEvents() {
   }
 
 
+  bindTransferModalEvents()
+
   bindBrandHome()
 
 }
@@ -2444,8 +2670,6 @@ function openLineupPlayerModal() {
 
   list.innerHTML = `
 
-    ${renderAddTransferButton()}
-
     ${renderPlayerCategory(
       'KALECİ',
       availablePlayers
@@ -2471,22 +2695,6 @@ function openLineupPlayerModal() {
 
   modal.classList.remove(
     'hidden'
-  )
-
-
-  bindAddTransferForm(
-    newPlayer => {
-
-      lineup[
-        selectedSlot
-      ] = newPlayer
-
-
-      closeLineupModal()
-
-      renderLineup()
-
-    }
   )
 
 
