@@ -29,7 +29,7 @@ const fenerbahcePlayers = [
       id: 103,
       name: "Kerem Aktürkoğlu",
       shortName: "K. AKTÜRKOĞLU",
-      number: 9,
+      number: 7,
       age: 27,
       country: "Türkiye",
       position: "SLK",
@@ -206,16 +206,6 @@ const fenerbahcePlayers = [
       tags: ["yerli", "fenerbahce"]
     },
     {
-      id: 121,
-      name: "Fred",
-      shortName: "FRED",
-      number: 7,
-      age: 33,
-      country: "Brazil",
-      position: "OS",
-      tags: ["yabanci", "fenerbahce"]
-    },
-    {
       id: 122,
       name: "Vedat Muriqi",
       shortName: "V. MURIQI",
@@ -325,16 +315,7 @@ const fenerbahcePlayers = [
       position: "KL",
       tags: ["yerli", "fenerbahce"]
     },
-    {
-      id: 133,
-      name: "Omar Fayed",
-      shortName: "O. FAYED",
-      number: 60,
-      age: 23,
-      country: "Egypt",
-      position: "STP",
-      tags: ["u23yabanci", "fenerbahce"]
-    },
+    
     {
       id: 134,
       name: "Mert Günok",
@@ -369,7 +350,7 @@ const fenerbahcePlayers = [
       id: 137,
       name: "Romelu Lukaku",
       shortName: "R. LUKAKU",
-      number: null,
+      number: 9,
       age: 33,
       country: "Belgium",
       position: "SNT",
@@ -967,7 +948,7 @@ const besiktasPlayers = [
       id: 330,
       name: "Dusan Vlahovic",
       shortName: "D. VLAHOVIC",
-      number: null,
+      number: 28,
       age: 26,
       country: "Serbia",
       position: "SNT",
